@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { SongLyricsQuiz } from "./song_lyrics_quiz";
 
 // function to get song lyrics from the api
 const getSongLyrics = async (songId: string) => {
@@ -61,8 +62,10 @@ export default function Search() {
   // set the songs when the input changes
   useEffect(() => {
     // if the input is empty, return
-    if (!input) return;
-    // get the song data, converting response to json
+    if (!input) {
+      setSongs([]);
+      return;
+    }
 
     // set cancel variable to false
     let cancel = false;
@@ -115,7 +118,7 @@ export default function Search() {
       />
       <button>Search</button>
       {loading && <p>Loading...</p>}
-      {songs.length > 0 && (
+      {songs && (
         <div>
           {songs.map((song: any) => (
             <div key={song.result.id}>
@@ -130,7 +133,13 @@ export default function Search() {
           ))}
         </div>
       )}
-      {songLyrics && <p>{songLyrics}</p>}
+      {songLyrics && (
+        // display the song lyric quiz
+        <div>
+          <h3>Finish the lyric</h3>
+          <SongLyricsQuiz songLyrics={songLyrics} />
+        </div>
+      )}
     </div>
   );
 }
