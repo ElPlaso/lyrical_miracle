@@ -1,7 +1,7 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { SongLyricsQuiz } from "./song_lyrics_quiz";
 
 // function to get song lyrics from the api
 const getSongLyrics = async (songId: string) => {
@@ -28,9 +28,6 @@ export default function Search() {
   // store a list of songs
   const [songs, setSongs] = useState([]);
 
-  // store the current song lyrics
-  const [songLyrics, setSongLyrics] = useState("");
-
   // store whether data is loading
   const [loading, setLoading] = useState(false);
 
@@ -38,25 +35,6 @@ export default function Search() {
   // this is typescript
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInput(event.target.value);
-  };
-
-  // a handler for when get lyrics is clicked
-  const handleGetLyrics = (songId: string) => {
-    // set the loading state to true
-    setLoading(true);
-    // get the song lyrics
-    getSongLyrics(songId)
-      .then((data) => {
-        // set the song lyrics to the data
-        setSongLyrics(data.lyrics.lyrics.body.plain);
-      })
-      .then(() => {
-        // set the loading state to false
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   };
 
   // set the songs when the input changes
@@ -123,21 +101,13 @@ export default function Search() {
           {songs.map((song: any) => (
             <div key={song.result.id}>
               <h3>{song.result.full_title}</h3>
-              <button
-                // on click, call the handle get lyrics function
-                onClick={() => handleGetLyrics(song.result.id)}
+              <Link
+                href={{ pathname: "/quiz", query: { songID: song.result.id } }}
               >
                 Get Lyrics
-              </button>
+              </Link>
             </div>
           ))}
-        </div>
-      )}
-      {songLyrics && (
-        // display the song lyric quiz
-        <div>
-          <h3>Finish the lyric</h3>
-          <SongLyricsQuiz songLyrics={songLyrics} />
         </div>
       )}
     </div>
