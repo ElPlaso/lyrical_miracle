@@ -23,19 +23,23 @@ export default async function QuizPage({
 }) {
   const songData = await getSongLyrics(searchParams?.songID as string);
 
-  const songTitle = songData["lyrics"]["tracking_data"]["title"];
+  if (songData["lyrics"]) {
+    const songTitle = songData["lyrics"]["tracking_data"]["title"];
 
-  const songArtist = songData["lyrics"]["tracking_data"]["primary_artist"];
+    const songArtist = songData["lyrics"]["tracking_data"]["primary_artist"];
 
-  const songLyrics = songData["lyrics"]["lyrics"]["body"]["plain"];
+    const songLyrics = songData["lyrics"]["lyrics"]["body"]["plain"];
 
-  return (
-    <div>
-      <h1>Finish these lyrics for: </h1>
-      <h2>{songTitle}</h2>
-      <h3>{songArtist}</h3>
-      <SongLyricsQuiz songLyrics={songLyrics} />
-      <Link href="/">Home</Link>
-    </div>
-  );
+    return (
+      <div>
+        <h1>Finish these lyrics for: </h1>
+        <h2>{songTitle}</h2>
+        <h3>{songArtist}</h3>
+        <SongLyricsQuiz songLyrics={songLyrics} />
+        <Link href="/">Home</Link>
+      </div>
+    );
+  } else {
+    return <div>Page not found</div>;
+  }
 }
