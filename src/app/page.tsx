@@ -1,17 +1,14 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
-
-//imports
 import Search from "./components/search";
+import "./styles/styles.css";
+import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
-    <main>
-      <div>
-        <Search />
-      </div>
-    </main>
+    <div>
+      <h1 className={inter.className}>Become a Lyrical Miracle Individual</h1>
+      <Search />
+    </div>
   );
 }

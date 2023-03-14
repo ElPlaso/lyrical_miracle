@@ -2,6 +2,10 @@
 
 // imports
 import { useState, useEffect } from "react";
+import "@/app/styles/styles.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 // displays portions of a song's lyrics and asks the user to fill in the missing words
 export const SongLyricsQuiz = (props: any) => {
@@ -114,18 +118,31 @@ export const SongLyricsQuiz = (props: any) => {
   };
 
   return (
-    <div>
-      <p>
+    <>
+      <p className={inter.className}>
         ...
         {visibleSongLyrics.map((word, index) => {
           return <span key={index}>{word + " "}</span>;
         })}
-        <br />
-        <button onClick={() => setVisibleSongLyrics(songLyricsPortion)}>
+      </p>
+      <div>
+        <button
+          role="button"
+          className="button"
+          style={{ marginRight: "1rem" }}
+          onClick={() => setVisibleSongLyrics(songLyricsPortion)}
+        >
           View answer
         </button>
-        <button onClick={() => getRandomLyrics(songLyricsArray)}>New</button>
-      </p>
+        <button
+          role="button"
+          className="button"
+          onClick={() => getRandomLyrics(songLyricsArray)}
+        >
+          New lyrics
+        </button>
+      </div>
+
       <input
         type="text"
         value={input}
@@ -133,9 +150,13 @@ export const SongLyricsQuiz = (props: any) => {
           setInput(event.target.value);
         }}
       />
-      <button onClick={() => handleAnswer(songLyricsPortion, input)}>
+      <button
+        role="button"
+        className="button"
+        onClick={() => handleAnswer(songLyricsPortion, input)}
+      >
         Submit
       </button>
-    </div>
+    </>
   );
 };

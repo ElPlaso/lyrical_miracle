@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { SongLyricsQuiz } from "./components/song_lyrics_quiz";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 async function getSongLyrics(id: String) {
   const response = await fetch(
@@ -31,15 +34,23 @@ export default async function QuizPage({
     const songLyrics = songData["lyrics"]["lyrics"]["body"]["plain"];
 
     return (
-      <div>
-        <h1>Finish these lyrics for: </h1>
-        <h2>{songTitle}</h2>
-        <h3>{songArtist}</h3>
-        <SongLyricsQuiz songLyrics={songLyrics} />
-        <Link href="/">Home</Link>
-      </div>
+      <>
+        <div>
+          <h1 className={inter.className}>Finish these lyrics for: </h1>
+
+          <h2 className={inter.className}>
+            {songTitle} by {songArtist}
+          </h2>
+
+          <SongLyricsQuiz songLyrics={songLyrics} />
+        </div>
+
+        <Link style={{ textDecoration: "underline" }} href="/">
+          <h3 className={inter.className}>Home</h3>
+        </Link>
+      </>
     );
   } else {
-    return <div>Page not found</div>;
+    return <div className={inter.className}>Page not found</div>;
   }
 }

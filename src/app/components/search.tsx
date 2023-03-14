@@ -2,6 +2,10 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import "../styles/styles.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 // function to get song lyrics from the api
 const getSongLyrics = async (songId: string) => {
@@ -88,28 +92,38 @@ export default function Search() {
 
   // return the input and button
   return (
-    <div>
-      <input
-        type="text"
-        // on change, call the handle input function
-        onChange={handleInput}
-      />
-      <button>Search</button>
-      {loading && <p>Loading...</p>}
-      {songs && (
-        <div>
-          {songs.map((song: any) => (
-            <div key={song.result.id}>
-              <h3>{song.result.full_title}</h3>
-              <Link
-                href={{ pathname: "/quiz", query: { songID: song.result.id } }}
-              >
-                Get Lyrics
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <>
+      <div>
+        <label className={inter.className}>Search</label>
+        <input
+          type="text"
+          // on change, call the handle input function
+          onChange={handleInput}
+        />
+      </div>
+      <div>
+        {loading && <p className={inter.className}>Loading...</p>}
+        {songs && (
+          <div>
+            {songs.map((song: any) => (
+              <div key={song.result.id} className="card">
+                <Link
+                  href={{
+                    pathname: "/quiz",
+                    query: { songID: song.result.id },
+                  }}
+                >
+                  <span>
+                    <h2 className={inter.className}>
+                      {song.result.full_title}
+                    </h2>
+                  </span>
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
