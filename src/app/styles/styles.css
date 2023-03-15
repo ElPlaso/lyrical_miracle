@@ -135,3 +135,22 @@ input {
 .button:-webkit-details-marker {
   display: none;
 }
+
+.typed {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 50px;
+  animation: typing;
+  animation-duration: 1.5s;
+  animation-timing-function: steps(30, end);
+  animation-fill-mode: forwards;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}

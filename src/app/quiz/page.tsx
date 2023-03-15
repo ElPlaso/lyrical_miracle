@@ -36,6 +36,15 @@ export default async function QuizPage({
     return (
       <>
         <div>
+          <div>
+            <Link
+              className={inter.className}
+              style={{ textDecoration: "underline" }}
+              href="/"
+            >
+              Home
+            </Link>
+          </div>
           <h1 className={inter.className}>Finish these lyrics for: </h1>
 
           <h2 className={inter.className}>
@@ -44,10 +53,6 @@ export default async function QuizPage({
 
           <SongLyricsQuiz songLyrics={songLyrics} />
         </div>
-
-        <Link style={{ textDecoration: "underline" }} href="/">
-          <h3 className={inter.className}>Home</h3>
-        </Link>
       </>
     );
   } else {

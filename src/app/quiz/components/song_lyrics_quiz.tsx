@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import "@/app/styles/styles.css";
 import { Inter } from "next/font/google";
+import VisibleLyrics from "./visible_lyrics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,25 +15,19 @@ export const SongLyricsQuiz = (props: any) => {
   const [songLyricsPortion, setSongLyricsPortion] = useState([] as string[]);
   const [visibleSongLyrics, setVisibleSongLyrics] = useState([] as string[]);
 
-  const getRandomLyrics = (lyricArray: string[]) => {
-    setSongLyricsPortion([]);
-
-    let lyrics: string[] = lyricArray;
-
+  const getRandomLyrics = (lyrics: string[]) => {
     // get a random index to start from
     const randomIndex = Math.floor(
       Math.random() * (songLyricsArray.length - 20)
     );
 
     // add words to the song lyrics portion until a word contains a newline character
-    let songLyricsPortion = [];
+    let songLyrics = [] as string[];
     for (let i = randomIndex; i < lyrics.length; i++) {
       if (lyrics[i].includes("\n")) {
-        if (songLyricsPortion.length >= 5) {
+        if (songLyrics.length >= 5) {
           // add the word before the newline character to the song lyrics portion
-          songLyricsPortion.push(
-            lyrics[i].substring(0, lyrics[i].indexOf("\n"))
-          );
+          songLyrics.push(lyrics[i].substring(0, lyrics[i].indexOf("\n")));
           break;
         } else {
           // if the song lyrics portion is too short,
@@ -40,12 +35,13 @@ export const SongLyricsQuiz = (props: any) => {
           lyrics[i] = lyrics[i].replace("\n", " ");
         }
       }
-      songLyricsPortion.push(lyrics[i]);
+      songLyrics.push(lyrics[i]);
     }
 
     // make a copy of the song lyrics portion
-    const visibleSongLyricsPortion = [...songLyricsPortion];
-    // replace every character of the last 2 words of the song lyrics portion with an underscore
+    let visibleSongLyricsPortion = songLyrics.slice();
+
+    // replace every character of the last 2 words of the song lyrics portion with an asterisk
     // except if the character is a punctuation mark
     for (
       let i = visibleSongLyricsPortion.length - 2;
@@ -60,14 +56,14 @@ export const SongLyricsQuiz = (props: any) => {
         ) {
           visibleSongLyricsPortion[i] = visibleSongLyricsPortion[i].replace(
             visibleSongLyricsPortion[i][j],
-            "_"
+            "*"
           );
         }
       }
     }
 
     // set the song lyrics portion as a string
-    setSongLyricsPortion(songLyricsPortion);
+    setSongLyricsPortion(songLyrics);
 
     // set the visible song lyrics portion as a string
     setVisibleSongLyrics(visibleSongLyricsPortion);
@@ -111,29 +107,17 @@ export const SongLyricsQuiz = (props: any) => {
     // check if the user's answer matches the last 2 words of the song lyrics portion
     if (answer === lastTwoWords) {
       // if the user's answer is correct, set the visible song lyrics portion to the song lyrics portion
-      setVisibleSongLyrics(songLyricsPortion);
+      setVisibleSongLyrics(lyrics);
     }
+  };
 
-    console.log(songLyricsPortion);
+  const showAnswer = () => {
+    setVisibleSongLyrics(songLyricsPortion);
   };
 
   return (
     <>
-      <p className={inter.className}>
-        ...
-        {visibleSongLyrics.map((word, index) => {
-          return <span key={index}>{word + " "}</span>;
-        })}
-      </p>
-      <div>
-        <button
-          role="button"
-          className="button"
-          style={{ marginRight: "1rem" }}
-          onClick={() => setVisibleSongLyrics(songLyricsPortion)}
-        >
-          View answer
-        </button>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <button
           role="button"
           className="button"
@@ -141,7 +125,19 @@ export const SongLyricsQuiz = (props: any) => {
         >
           New lyrics
         </button>
+        <button role="button" className="button" onClick={showAnswer}>
+          View answer
+        </button>
       </div>
+
+      {/* set key to remount on songLyricsPortion change 
+        This will cause reanimation of the visible lyrics
+        but will not cause reanimation when lyrics are revealed
+      */}
+      <VisibleLyrics
+        key={songLyricsPortion}
+        visibleSongLyrics={visibleSongLyrics}
+      />
 
       <input
         type="text"
@@ -150,13 +146,16 @@ export const SongLyricsQuiz = (props: any) => {
           setInput(event.target.value);
         }}
       />
-      <button
-        role="button"
-        className="button"
-        onClick={() => handleAnswer(songLyricsPortion, input)}
-      >
-        Submit
-      </button>
+
+      <div>
+        <button
+          role="button"
+          className="button"
+          onClick={() => handleAnswer(songLyricsPortion, input)}
+        >
+          Submit
+        </button>
+      </div>
     </>
   );
 };
