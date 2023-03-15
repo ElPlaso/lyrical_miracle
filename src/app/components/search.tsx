@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import "../styles/styles.css";
 import { Inter } from "next/font/google";
+import Loader from "./loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -93,37 +94,44 @@ export default function Search() {
   // return the input and button
   return (
     <>
-      <div>
-        <label className={inter.className}>Search</label>
-        <input
-          type="text"
-          // on change, call the handle input function
-          onChange={handleInput}
-        />
-      </div>
-      <div>
-        {loading && <p className={inter.className}>Loading...</p>}
-        {songs && (
-          <div>
-            {songs.map((song: any) => (
-              <div key={song.result.id} className="card">
-                <Link
-                  href={{
-                    pathname: "/quiz",
-                    query: { songID: song.result.id },
-                  }}
-                >
+      <label className={inter.className}>Search</label>
+      <input
+        type="text"
+        // on change, call the handle input function
+        onChange={handleInput}
+      />
+
+      {loading ? (
+        <div style={{ textAlign: "center" }}>
+          <Loader />
+        </div>
+      ) : (
+        <>
+          {songs ? (
+            songs.map((song: any) => (
+              <Link
+                key={song.result.id}
+                href={{
+                  pathname: "/quiz",
+                  query: { songID: song.result.id },
+                }}
+              >
+                <div className="card">
                   <span>
                     <h2 className={inter.className}>
                       {song.result.full_title}
                     </h2>
                   </span>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className={inter.className}>
+              A problem occurred, please try again.
+            </p>
+          )}
+        </>
+      )}
     </>
   );
 }
